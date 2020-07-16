@@ -12,6 +12,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
 
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入密码') !== ''){
+                alert('密码错误');
+                history.back();
+            }
+        }
+    })();
+</script>
 
 
   
@@ -147,7 +157,7 @@
     root: '/',
     scheme: 'Gemini',
     version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -411,18 +421,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/15/myfirstlab/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/15/myfirstlab/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
 
           
           
@@ -627,7 +625,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  635
+                  663
                 </span>
               
 
@@ -665,7 +663,9 @@
 
       
         
-          <h1 id="web前端学习笔记"><a href="#web前端学习笔记" class="headerlink" title="web前端学习笔记"></a>web前端学习笔记</h1>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><div align = "center"><font color=#FF0000 size=5>前言部分主要是包含文章的更新的内容和时间</font></div>
+<div align = "center">2020-7-16:实现文本居中</div>
+<div align = "center">2020-7-15:实现文档加密</div>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/07/14/web%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
@@ -850,6 +850,13 @@
       
 
       
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
 
     </div>
   </aside>
@@ -912,11 +919,6 @@
       </div>
     </footer>
 
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
     
 
     

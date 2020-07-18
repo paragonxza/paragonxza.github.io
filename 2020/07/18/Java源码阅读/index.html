@@ -117,10 +117,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.png?v=5.1.4">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
@@ -146,13 +146,23 @@
 <meta property="og:url" content="https://xza0226.com/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/index.html">
 <meta property="og:site_name" content="paragon‘s blog">
 <meta property="og:description" content="概要本文主要是总结如何配置Java源码的阅读环境，可以方便我们更深入的了解Java JDK的相关底层实现逻辑，许多诸如HashMap实现逻辑均可通过本方法调试查阅底层交互。">
-<meta property="og:image" content="https://xza0226.com/myblog/source/_posts/JavaDocPic/JavaDoc1.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29utS.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U2916s.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29Kfg.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29QpQ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29nk8.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U293Xn.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29Gmq.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29Y7V.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29J00.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29NkT.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/18/U29UtU.png">
 <meta property="article:published_time" content="2020-07-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-07-18T11:03:28.770Z">
+<meta property="article:modified_time" content="2020-07-18T12:21:58.375Z">
 <meta property="article:author" content="paragon">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xza0226.com/myblog/source/_posts/JavaDocPic/JavaDoc1.png">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/07/18/U29utS.png">
 
 
 
@@ -457,7 +467,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.3k
+                  1.2k
                 </span>
               
 
@@ -473,7 +483,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  4
                 </span>
               
             </div>
@@ -505,17 +515,16 @@
 <h2 id="Java源码环境搭建"><a href="#Java源码环境搭建" class="headerlink" title="Java源码环境搭建"></a>Java源码环境搭建</h2><h3 id="1-获取Java源码"><a href="#1-获取Java源码" class="headerlink" title="1.获取Java源码"></a>1.获取Java源码</h3><p>由于新版Java14的源码不好直接获取，我们就选择最常用的Java1.8的源码，通过官网下载Java1.8即可获得对应相关资源，具体实现步骤如下：</p>
 <ol>
 <li><p>通过Java 1.8构建新的Java项目</p>
-<p><img src="/myblog/source/_posts/JavaDocPic/JavaDoc1.png" alt="JavaDoc1"></p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U29utS.png" alt="U29utS.png"></p>
 <p>在新建项目中创建两个项目文件夹source和test，其中source用来存放Java的源码，test用来存放需要阅读的源码，笔者这里选择hashmap作为演示。</p>
 </li>
 <li><p>配置source环境</p>
 <p>在source文件中添加我们下载好的Java 1.8的源码，首先选择IDEA左上角Project Structure(Mac英文状态下快捷键⌘;)，然后选择SDKs便可获取到对应的源码路径。</p>
-<p>![image-20200718125326072](/Users/paragon/Library/Application Support/typora-user-images/image-20200718125326072.png)</p>
-<p>打开对应路径文件找到src.zip文件解压便可得Java 1.8对应的源码，之后将解压后的文件复制粘贴至我们的项目source路径下：(source源码对应文件下的资源可能略有不同，视个人的JDK版本)</p>
-<p>![image-20200718125720062](/Users/paragon/Library/Application Support/typora-user-images/image-20200718125720062.png)</p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U2916s.png" alt="U2916s.png"><br>打开对应路径文件找到src.zip文件解压便可得Java 1.8对应的源码，之后将解压后的文件复制粘贴至我们的项目source路径下：(source源码对应文件下的资源可能略有不同，视个人的JDK版本)</p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U29Kfg.png" alt="U29Kfg.png"></p>
 </li>
 <li><p>创建测试代码</p>
-<p>![image-20200718130431845](/Users/paragon/Library/Application Support/typora-user-images/image-20200718130431845.png)</p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U29QpQ.png" alt="U29QpQ.png"></p>
 <p>在test.hashmap中创建Test类，然后键入如下代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> JavaDoc.test.hashmap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Map&lt;String,Double&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        hashMap.put(<span class="string">"k1"</span>,<span class="number">0.1</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k2"</span>,<span class="number">0.2</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k3"</span>,<span class="number">0.3</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k4"</span>,<span class="number">0.4</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -525,23 +534,22 @@
 <h3 id="2-IDEA环境配置调整"><a href="#2-IDEA环境配置调整" class="headerlink" title="2.IDEA环境配置调整"></a>2.IDEA环境配置调整</h3><ol>
 <li><p>修改heap size</p>
 <p>为了保证hashmap基本运行稳定，我们先调整一下heap size，打开Preference——Build,Execution——Compiler，找到Build process heap size选项，调整大小：</p>
-<p>![image-20200718132251155](/Users/paragon/Library/Application Support/typora-user-images/image-20200718132251155.png)</p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U29nk8.png" alt="U29nk8.png"></p>
 </li>
 <li><p>解除源码查阅编辑限制</p>
 <p>由于Java JDK的源码是受保护的，我们进行调试后无法直接进入源码内部去查看实现逻辑，这时候我们就需要更改Preference——Build,Execution——Stepping，找到Do not step into the classes  选项，去除前面的勾选，这时候我们便可以调试进入源码内部了：</p>
-<p>![image-20200718140026695](/Users/paragon/Library/Application Support/typora-user-images/image-20200718140026695.png)</p>
-<p>接下来我们需要解除源码的编辑限制，这样我们在调试查看源码的过程中就可以添加一部分自己的注释了，首先打开IDEA左上角Project Structure选择SDKs——Sourcepath 选中下图所示文件后选择最下角➖符号移除，然后添加我们自己目录/Users/paragon/IdeaProjects/JavaDoc/src/JavaDoc/source（路径即为自己所对应项目下的source文件）</p>
-<p>![image-20200718140942400](/Users/paragon/Library/Application Support/typora-user-images/image-20200718140942400.png)</p>
-<p>![image-20200718141514393](/Users/paragon/Library/Application Support/typora-user-images/image-20200718141514393.png)</p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U293Xn.png" alt="U293Xn.png"></p>
+<p>接下来我们需要解除源码的编辑限制，这样我们在调试查看源码的过程中就可以添加一部分自己的注释了，首先打开IDEA左上角Project Structure选择SDKs——Sourcepath,选中下图所示文件后，<br>选择最下角➖符号移除，然后添加我们自己目录JavaDoc/src/JavaDoc/source（路径即为自己所对应项目下的source文件）</p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U29Gmq.png" alt="U29Gmq.png"></p>
+<p><img src="https://s1.ax1x.com/2020/07/18/U29Y7V.png" alt="U29Y7V.png"></p>
 <p>这样我们整体的Java源码的阅读环境就搭建起来了，不仅可以查看JDK源码，甚至可以在源码部分添加自己的理解。</p>
 </li>
 </ol>
 <h2 id="HashMap基本调试"><a href="#HashMap基本调试" class="headerlink" title="HashMap基本调试"></a>HashMap基本调试</h2><h3 id="1-启动断点调试"><a href="#1-启动断点调试" class="headerlink" title="1.启动断点调试"></a>1.启动断点调试</h3><p>选择IDEA右上角对应的debug，静等程序debug完成。</p>
-<h3 id="2-观察调试过程"><a href="#2-观察调试过程" class="headerlink" title="2.观察调试过程"></a>2.观察调试过程</h3><p>![image-20200718170316004](/Users/paragon/Library/Application Support/typora-user-images/image-20200718170316004.png)</p>
-<p>![image-20200718170853771](/Users/paragon/Library/Application Support/typora-user-images/image-20200718170853771.png)</p>
-<p>调试过程只是简单的HashMap的流程记录，原理部分参看网上诸多关于HashMap的讲解。</p>
+<h3 id="2-观察调试过程"><a href="#2-观察调试过程" class="headerlink" title="2.观察调试过程"></a>2.观察调试过程</h3><p>   <img src="https://s1.ax1x.com/2020/07/18/U29J00.png" alt="U29J00.png"></p>
+<p>   <img src="https://s1.ax1x.com/2020/07/18/U29NkT.png" alt="U29NkT.png"><br>调试过程只是简单的HashMap的流程记录，原理部分参看网上诸多关于HashMap的讲解。</p>
 <h3 id="3-常用的Java源码学习"><a href="#3-常用的Java源码学习" class="headerlink" title="3.常用的Java源码学习"></a>3.常用的Java源码学习</h3><p>在source中包含了所有的Java  JDK1.8的源码，其中主要实现集中于source——Java下：</p>
-<p>![image-20200718180127124](/Users/paragon/Library/Application Support/typora-user-images/image-20200718180127124.png)</p>
+<p>   <img src="https://s1.ax1x.com/2020/07/18/U29UtU.png" alt="U29UtU.png"></p>
 <p>其中各个组件的大致功能如下：</p>
 <table>
 <thead>

@@ -129,7 +129,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -140,14 +140,19 @@
 
 
 
-<meta name="description" content="所赖君子见机，达人识命。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="paragon‘s blog">
-<meta property="og:url" content="https://xza0226.com/categories/%E6%88%91%E7%9A%84%E9%9A%8F%E7%AC%94/index.html">
+<meta name="description" content="概要本文主要是总结如何配置Java源码的阅读环境，可以方便我们更深入的了解Java JDK的相关底层实现逻辑，许多诸如HashMap实现逻辑均可通过本方法调试查阅底层交互。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java源码阅读">
+<meta property="og:url" content="https://xza0226.com/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/index.html">
 <meta property="og:site_name" content="paragon‘s blog">
-<meta property="og:description" content="所赖君子见机，达人识命。">
+<meta property="og:description" content="概要本文主要是总结如何配置Java源码的阅读环境，可以方便我们更深入的了解Java JDK的相关底层实现逻辑，许多诸如HashMap实现逻辑均可通过本方法调试查阅底层交互。">
+<meta property="og:image" content="https://xza0226.com/myblog/source/_posts/JavaDocPic/JavaDoc1.png">
+<meta property="article:published_time" content="2020-07-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-07-18T11:03:28.770Z">
 <meta property="article:author" content="paragon">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xza0226.com/myblog/source/_posts/JavaDocPic/JavaDoc1.png">
 
 
 
@@ -177,13 +182,13 @@
 
 
 
-  <link rel="canonical" href="https://xza0226.com/categories/我的随笔/"/>
+  <link rel="canonical" href="https://xza0226.com/2020/07/18/Java源码阅读/"/>
 
 
 
 
 
-  <title>分类: 我的随笔 | paragon‘s blog</title>
+  <title>Java源码阅读 | paragon‘s blog</title>
   
 
 
@@ -202,7 +207,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -340,55 +345,304 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>我的随笔<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xza0226.com/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="paragon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="paragon‘s blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/07/15/myfirstlab/" itemprop="url">
-              
-                <span itemprop="name">myfirstlab</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Java源码阅读</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-07-15T11:03:16+08:00"
-              content="2020-07-15" >
-          07-15
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-18T00:00:00+08:00">
+                2020-07-18
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/" itemprop="url" rel="index">
+                    <span itemprop="name">学习心得</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量 <i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本文主要是总结如何配置Java源码的阅读环境，可以方便我们更深入的了解Java JDK的相关底层实现逻辑，许多诸如HashMap实现逻辑均可通过本方法调试查阅底层交互。</p>
+<a id="more"></a>
+<p>看完本篇可以收获：</p>
+<ul>
+<li>Java源码阅读技巧</li>
+<li>HashMap基本逻辑</li>
+<li>IDEA调试技巧</li>
+</ul>
+<h2 id="Java源码环境搭建"><a href="#Java源码环境搭建" class="headerlink" title="Java源码环境搭建"></a>Java源码环境搭建</h2><h3 id="1-获取Java源码"><a href="#1-获取Java源码" class="headerlink" title="1.获取Java源码"></a>1.获取Java源码</h3><p>由于新版Java14的源码不好直接获取，我们就选择最常用的Java1.8的源码，通过官网下载Java1.8即可获得对应相关资源，具体实现步骤如下：</p>
+<ol>
+<li><p>通过Java 1.8构建新的Java项目</p>
+<p><img src="/myblog/source/_posts/JavaDocPic/JavaDoc1.png" alt="JavaDoc1"></p>
+<p>在新建项目中创建两个项目文件夹source和test，其中source用来存放Java的源码，test用来存放需要阅读的源码，笔者这里选择hashmap作为演示。</p>
+</li>
+<li><p>配置source环境</p>
+<p>在source文件中添加我们下载好的Java 1.8的源码，首先选择IDEA左上角Project Structure(Mac英文状态下快捷键⌘;)，然后选择SDKs便可获取到对应的源码路径。</p>
+<p>![image-20200718125326072](/Users/paragon/Library/Application Support/typora-user-images/image-20200718125326072.png)</p>
+<p>打开对应路径文件找到src.zip文件解压便可得Java 1.8对应的源码，之后将解压后的文件复制粘贴至我们的项目source路径下：(source源码对应文件下的资源可能略有不同，视个人的JDK版本)</p>
+<p>![image-20200718125720062](/Users/paragon/Library/Application Support/typora-user-images/image-20200718125720062.png)</p>
+</li>
+<li><p>创建测试代码</p>
+<p>![image-20200718130431845](/Users/paragon/Library/Application Support/typora-user-images/image-20200718130431845.png)</p>
+<p>在test.hashmap中创建Test类，然后键入如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> JavaDoc.test.hashmap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Map&lt;String,Double&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        hashMap.put(<span class="string">"k1"</span>,<span class="number">0.1</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k2"</span>,<span class="number">0.2</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k3"</span>,<span class="number">0.3</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k4"</span>,<span class="number">0.4</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在Map所在行处添加断点调试，这样我们基本的HashMap的源码阅读环境就搭建完成了。</p>
+</li>
+</ol>
+<h3 id="2-IDEA环境配置调整"><a href="#2-IDEA环境配置调整" class="headerlink" title="2.IDEA环境配置调整"></a>2.IDEA环境配置调整</h3><ol>
+<li><p>修改heap size</p>
+<p>为了保证hashmap基本运行稳定，我们先调整一下heap size，打开Preference——Build,Execution——Compiler，找到Build process heap size选项，调整大小：</p>
+<p>![image-20200718132251155](/Users/paragon/Library/Application Support/typora-user-images/image-20200718132251155.png)</p>
+</li>
+<li><p>解除源码查阅编辑限制</p>
+<p>由于Java JDK的源码是受保护的，我们进行调试后无法直接进入源码内部去查看实现逻辑，这时候我们就需要更改Preference——Build,Execution——Stepping，找到Do not step into the classes  选项，去除前面的勾选，这时候我们便可以调试进入源码内部了：</p>
+<p>![image-20200718140026695](/Users/paragon/Library/Application Support/typora-user-images/image-20200718140026695.png)</p>
+<p>接下来我们需要解除源码的编辑限制，这样我们在调试查看源码的过程中就可以添加一部分自己的注释了，首先打开IDEA左上角Project Structure选择SDKs——Sourcepath 选中下图所示文件后选择最下角➖符号移除，然后添加我们自己目录/Users/paragon/IdeaProjects/JavaDoc/src/JavaDoc/source（路径即为自己所对应项目下的source文件）</p>
+<p>![image-20200718140942400](/Users/paragon/Library/Application Support/typora-user-images/image-20200718140942400.png)</p>
+<p>![image-20200718141514393](/Users/paragon/Library/Application Support/typora-user-images/image-20200718141514393.png)</p>
+<p>这样我们整体的Java源码的阅读环境就搭建起来了，不仅可以查看JDK源码，甚至可以在源码部分添加自己的理解。</p>
+</li>
+</ol>
+<h2 id="HashMap基本调试"><a href="#HashMap基本调试" class="headerlink" title="HashMap基本调试"></a>HashMap基本调试</h2><h3 id="1-启动断点调试"><a href="#1-启动断点调试" class="headerlink" title="1.启动断点调试"></a>1.启动断点调试</h3><p>选择IDEA右上角对应的debug，静等程序debug完成。</p>
+<h3 id="2-观察调试过程"><a href="#2-观察调试过程" class="headerlink" title="2.观察调试过程"></a>2.观察调试过程</h3><p>![image-20200718170316004](/Users/paragon/Library/Application Support/typora-user-images/image-20200718170316004.png)</p>
+<p>![image-20200718170853771](/Users/paragon/Library/Application Support/typora-user-images/image-20200718170853771.png)</p>
+<p>调试过程只是简单的HashMap的流程记录，原理部分参看网上诸多关于HashMap的讲解。</p>
+<h3 id="3-常用的Java源码学习"><a href="#3-常用的Java源码学习" class="headerlink" title="3.常用的Java源码学习"></a>3.常用的Java源码学习</h3><p>在source中包含了所有的Java  JDK1.8的源码，其中主要实现集中于source——Java下：</p>
+<p>![image-20200718180127124](/Users/paragon/Library/Application Support/typora-user-images/image-20200718180127124.png)</p>
+<p>其中各个组件的大致功能如下：</p>
+<table>
+<thead>
+<tr>
+<th>常用组件</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Java.io</td>
+<td>基本阻塞式io控制模型，eg:File,Console…</td>
+</tr>
+<tr>
+<td>Java.lang</td>
+<td>基础数据包装类型，eg:annotation,reflect…</td>
+</tr>
+<tr>
+<td>Java.math</td>
+<td>特殊数据处理类型，eg:BigInteger…</td>
+</tr>
+<tr>
+<td>Java.net</td>
+<td>网络通信模型，eg:Socket…</td>
+</tr>
+<tr>
+<td>Java.nio</td>
+<td>非阻塞式io控制模型，eg:Buffer…</td>
+</tr>
+<tr>
+<td>Java.time</td>
+<td>JDK1.8新增，时间模型</td>
+</tr>
+<tr>
+<td>Java.util</td>
+<td>基本工具，eg:J.U.C(concurrent),hashmap…</td>
+</tr>
+</tbody></table>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文主要是对Java源码部分通过IDEA进行调试分析，在调试过程中可以记录JDK底层源码的实现逻辑，加深自己对JDK源码的理解。</p>
+<p>可能遇到的问题：</p>
+<ul>
+<li><p>程序调试窗口无法正常调试：</p>
+<p>看看是不是IDEA右上角Edit Configurations选错成main class，需要更改成Test所在类。</p>
+</li>
+<li><p>Test中HashMap调试一直卡在writing classes：</p>
+<p>打开设置File——Preference(Windows下对应Settings)——Build,Execution——Compiler：调整heap size大小至合适范围，一般1800Mbytes足矣。</p>
+</li>
+<li><p>上述bug均未出现，但仍然无法调试阅读源码：</p>
+<p>可能是项目下source对应的文件不规范，建议从官网上下载对应的Java JDk，然后在安装目录中找到src.zip文件解压后将其重新导入到source目录下。</p>
+</li>
+</ul>
 
       
     </div>
+    
+    
+    
 
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="paragon wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -396,6 +650,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -416,8 +677,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -436,7 +706,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -447,7 +717,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -458,7 +728,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -511,11 +781,15 @@
               <ul class="links-of-blogroll-list">
                 
                   <li class="links-of-blogroll-item">
-                    <a href="https://www.baidu.com/" title="百度" target="_blank">百度</a>
+                    <a href="https://space.bilibili.com/384068749/" title="b站up主推荐" target="_blank">b站up主推荐</a>
                   </li>
                 
                   <li class="links-of-blogroll-item">
-                    <a href="https://www.google.com/" title="谷歌" target="_blank">谷歌</a>
+                    <a href="https://git-scm.com/book/zh/v2/" title="ProGit" target="_blank">ProGit</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.cyasylum.top/index.php/2019/12/17/概率论与数理统计/" title="浙大概率论笔记整理" target="_blank">浙大概率论笔记整理</a>
                   </li>
                 
               </ul>
@@ -527,6 +801,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概要"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java源码环境搭建"><span class="nav-number">2.</span> <span class="nav-text">Java源码环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-获取Java源码"><span class="nav-number">2.1.</span> <span class="nav-text">1.获取Java源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-IDEA环境配置调整"><span class="nav-number">2.2.</span> <span class="nav-text">2.IDEA环境配置调整</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap基本调试"><span class="nav-number">3.</span> <span class="nav-text">HashMap基本调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-启动断点调试"><span class="nav-number">3.1.</span> <span class="nav-text">1.启动断点调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-观察调试过程"><span class="nav-number">3.2.</span> <span class="nav-text">2.观察调试过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-常用的Java源码学习"><span class="nav-number">3.3.</span> <span class="nav-text">3.常用的Java源码学习</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -692,6 +982,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

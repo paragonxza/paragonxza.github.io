@@ -1,53 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>myfirstlab</title>
-    <url>/2020/07/15/myfirstlab/</url>
-    <content><![CDATA[<h1 id="第一篇文章"><a href="#第一篇文章" class="headerlink" title="第一篇文章"></a>第一篇文章</h1><h2 id="hello！"><a href="#hello！" class="headerlink" title="hello！"></a>hello！</h2><h3 id="you-are-my-sweet-heart-❤️"><a href="#you-are-my-sweet-heart-❤️" class="headerlink" title="you are my sweet heart!❤️"></a>you are my sweet heart!❤️</h3><a id="more"></a>
-
-<h2 id="world！"><a href="#world！" class="headerlink" title="world！"></a>world！</h2><h3 id="okokokoko！"><a href="#okokokoko！" class="headerlink" title="okokokoko！"></a>okokokoko！</h3>]]></content>
-      <categories>
-        <category>我的随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>web前端学习笔记</title>
-    <url>/2020/07/14/web%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><div align = "center"><font color=#FF0000 size=5>前言部分主要是包含文章的更新的内容和时间</font></div>
-<div align = "center">2020-7-16:实现文本居中</div>
-<div align = "center">2020-7-15:实现文档加密</div>
-
+    <title>Java源码阅读</title>
+    <url>/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/</url>
+    <content><![CDATA[<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本文主要是总结如何配置Java源码的阅读环境，可以方便我们更深入的了解Java JDK的相关底层实现逻辑，许多诸如HashMap实现逻辑均可通过本方法调试查阅底层交互。</p>
 <a id="more"></a>
-
-<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><h3 id="1-浏览器内核"><a href="#1-浏览器内核" class="headerlink" title="1 浏览器内核"></a>1 浏览器内核</h3><ul>
-<li>JS引擎</li>
-<li>渲染引擎<ul>
-<li>Trident（IE内核）；EdgeHTML（Edge内核）</li>
-<li>Gecko（Firefox内核）</li>
-<li>webkit（Safari内核）</li>
-<li>Blink（Chrome内核）</li>
+<p>看完本篇可以收获：</p>
+<ul>
+<li>Java源码阅读技巧</li>
+<li>HashMap基本逻辑</li>
+<li>IDEA调试技巧</li>
 </ul>
+<h2 id="Java源码环境搭建"><a href="#Java源码环境搭建" class="headerlink" title="Java源码环境搭建"></a>Java源码环境搭建</h2><h3 id="1-获取Java源码"><a href="#1-获取Java源码" class="headerlink" title="1.获取Java源码"></a>1.获取Java源码</h3><p>由于新版Java14的源码不好直接获取，我们就选择最常用的Java1.8的源码，通过官网下载Java1.8即可获得对应相关资源，具体实现步骤如下：</p>
+<ol>
+<li><p>通过Java 1.8构建新的Java项目</p>
+<p><img src="/myblog/source/_posts/JavaDocPic/JavaDoc1.png" alt="JavaDoc1"></p>
+<p>在新建项目中创建两个项目文件夹source和test，其中source用来存放Java的源码，test用来存放需要阅读的源码，笔者这里选择hashmap作为演示。</p>
+</li>
+<li><p>配置source环境</p>
+<p>在source文件中添加我们下载好的Java 1.8的源码，首先选择IDEA左上角Project Structure(Mac英文状态下快捷键⌘;)，然后选择SDKs便可获取到对应的源码路径。</p>
+<p>![image-20200718125326072](/Users/paragon/Library/Application Support/typora-user-images/image-20200718125326072.png)</p>
+<p>打开对应路径文件找到src.zip文件解压便可得Java 1.8对应的源码，之后将解压后的文件复制粘贴至我们的项目source路径下：(source源码对应文件下的资源可能略有不同，视个人的JDK版本)</p>
+<p>![image-20200718125720062](/Users/paragon/Library/Application Support/typora-user-images/image-20200718125720062.png)</p>
+</li>
+<li><p>创建测试代码</p>
+<p>![image-20200718130431845](/Users/paragon/Library/Application Support/typora-user-images/image-20200718130431845.png)</p>
+<p>在test.hashmap中创建Test类，然后键入如下代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> JavaDoc.test.hashmap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Map&lt;String,Double&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        hashMap.put(<span class="string">"k1"</span>,<span class="number">0.1</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k2"</span>,<span class="number">0.2</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k3"</span>,<span class="number">0.3</span>);</span><br><span class="line">        hashMap.put(<span class="string">"k4"</span>,<span class="number">0.4</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在Map所在行处添加断点调试，这样我们基本的HashMap的源码阅读环境就搭建完成了。</p>
+</li>
+</ol>
+<h3 id="2-IDEA环境配置调整"><a href="#2-IDEA环境配置调整" class="headerlink" title="2.IDEA环境配置调整"></a>2.IDEA环境配置调整</h3><ol>
+<li><p>修改heap size</p>
+<p>为了保证hashmap基本运行稳定，我们先调整一下heap size，打开Preference——Build,Execution——Compiler，找到Build process heap size选项，调整大小：</p>
+<p>![image-20200718132251155](/Users/paragon/Library/Application Support/typora-user-images/image-20200718132251155.png)</p>
+</li>
+<li><p>解除源码查阅编辑限制</p>
+<p>由于Java JDK的源码是受保护的，我们进行调试后无法直接进入源码内部去查看实现逻辑，这时候我们就需要更改Preference——Build,Execution——Stepping，找到Do not step into the classes  选项，去除前面的勾选，这时候我们便可以调试进入源码内部了：</p>
+<p>![image-20200718140026695](/Users/paragon/Library/Application Support/typora-user-images/image-20200718140026695.png)</p>
+<p>接下来我们需要解除源码的编辑限制，这样我们在调试查看源码的过程中就可以添加一部分自己的注释了，首先打开IDEA左上角Project Structure选择SDKs——Sourcepath 选中下图所示文件后选择最下角➖符号移除，然后添加我们自己目录/Users/paragon/IdeaProjects/JavaDoc/src/JavaDoc/source（路径即为自己所对应项目下的source文件）</p>
+<p>![image-20200718140942400](/Users/paragon/Library/Application Support/typora-user-images/image-20200718140942400.png)</p>
+<p>![image-20200718141514393](/Users/paragon/Library/Application Support/typora-user-images/image-20200718141514393.png)</p>
+<p>这样我们整体的Java源码的阅读环境就搭建起来了，不仅可以查看JDK源码，甚至可以在源码部分添加自己的理解。</p>
+</li>
+</ol>
+<h2 id="HashMap基本调试"><a href="#HashMap基本调试" class="headerlink" title="HashMap基本调试"></a>HashMap基本调试</h2><h3 id="1-启动断点调试"><a href="#1-启动断点调试" class="headerlink" title="1.启动断点调试"></a>1.启动断点调试</h3><p>选择IDEA右上角对应的debug，静等程序debug完成。</p>
+<h3 id="2-观察调试过程"><a href="#2-观察调试过程" class="headerlink" title="2.观察调试过程"></a>2.观察调试过程</h3><p>![image-20200718170316004](/Users/paragon/Library/Application Support/typora-user-images/image-20200718170316004.png)</p>
+<p>![image-20200718170853771](/Users/paragon/Library/Application Support/typora-user-images/image-20200718170853771.png)</p>
+<p>调试过程只是简单的HashMap的流程记录，原理部分参看网上诸多关于HashMap的讲解。</p>
+<h3 id="3-常用的Java源码学习"><a href="#3-常用的Java源码学习" class="headerlink" title="3.常用的Java源码学习"></a>3.常用的Java源码学习</h3><p>在source中包含了所有的Java  JDK1.8的源码，其中主要实现集中于source——Java下：</p>
+<p>![image-20200718180127124](/Users/paragon/Library/Application Support/typora-user-images/image-20200718180127124.png)</p>
+<p>其中各个组件的大致功能如下：</p>
+<table>
+<thead>
+<tr>
+<th>常用组件</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Java.io</td>
+<td>基本阻塞式io控制模型，eg:File,Console…</td>
+</tr>
+<tr>
+<td>Java.lang</td>
+<td>基础数据包装类型，eg:annotation,reflect…</td>
+</tr>
+<tr>
+<td>Java.math</td>
+<td>特殊数据处理类型，eg:BigInteger…</td>
+</tr>
+<tr>
+<td>Java.net</td>
+<td>网络通信模型，eg:Socket…</td>
+</tr>
+<tr>
+<td>Java.nio</td>
+<td>非阻塞式io控制模型，eg:Buffer…</td>
+</tr>
+<tr>
+<td>Java.time</td>
+<td>JDK1.8新增，时间模型</td>
+</tr>
+<tr>
+<td>Java.util</td>
+<td>基本工具，eg:J.U.C(concurrent),hashmap…</td>
+</tr>
+</tbody></table>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文主要是对Java源码部分通过IDEA进行调试分析，在调试过程中可以记录JDK底层源码的实现逻辑，加深自己对JDK源码的理解。</p>
+<p>可能遇到的问题：</p>
+<ul>
+<li><p>程序调试窗口无法正常调试：</p>
+<p>看看是不是IDEA右上角Edit Configurations选错成main class，需要更改成Test所在类。</p>
+</li>
+<li><p>Test中HashMap调试一直卡在writing classes：</p>
+<p>打开设置File——Preference(Windows下对应Settings)——Build,Execution——Compiler：调整heap size大小至合适范围，一般1800Mbytes足矣。</p>
+</li>
+<li><p>上述bug均未出现，但仍然无法调试阅读源码：</p>
+<p>可能是项目下source对应的文件不规范，建议从官网上下载对应的Java JDk，然后在安装目录中找到src.zip文件解压后将其重新导入到source目录下。</p>
 </li>
 </ul>
-<h3 id="2-web标准"><a href="#2-web标准" class="headerlink" title="2 web标准"></a>2 web标准</h3><ul>
-<li>结构标准：用于对网页元素进行整理和分类，主要包括XML和XHTML两部分，即.html。</li>
-<li>样式标准：用于设置网页元素的外观样式，主要指CSS，即.css。</li>
-<li>行为标准：指网页模型的定义及交互的编写，主要包括DOM和ECMAScrpit两部分，即.js。</li>
-</ul>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><h3 id="1-HTML基本格式"><a href="#1-HTML基本格式" class="headerlink" title="1 HTML基本格式"></a>1 HTML基本格式</h3><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-webstorm常用快捷键"><a href="#2-webstorm常用快捷键" class="headerlink" title="2 webstorm常用快捷键"></a>2 webstorm常用快捷键</h3><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&gt;：下一个子标签</span></span><br><span class="line"><span class="comment">*：多少个标签</span></span><br><span class="line"><span class="comment">$：标签的名称序号</span></span><br><span class="line"><span class="comment">&#123;&#125;:标签的内容</span></span><br><span class="line"><span class="comment">[]:标签的引用属性</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--输入：h1,按tab键--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">&lt;!--输入：div#abc,按Tab键--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"abc"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">&lt;!--输入：div.abc,按Tab键--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"abc"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--输入  ul&gt;li*5&gt;a[href=#]&#123;我是第$个&#125; 再按tab键--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>我是第1个<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>我是第2个<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>我是第3个<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>我是第4个<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>我是第5个<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">&lt;!--输入 li*3&gt;div.img&gt;img[src='images/$.jpg'] 再按tab键--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"images/1.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"images/2.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"images/3.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--快速生成for循环--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">/* for循环：输入itar,再点击tab键*/</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span></span><br><span class="line"><span class="actionscript">            <span class="keyword">var</span> obj = array[i]; </span></span><br><span class="line">        &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--div#tab1+div#tab2--&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"tab1"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"tab2"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--引入  link   加tab键--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!--引入css   link:css   加tab键 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/mycss.css"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!--引入js    script:src  加tab键--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span> </span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!--html中插入js   script  加tab键--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--input:button 加tab键--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">""</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--form:get--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"get"</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--form:post--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3>]]></content>
+]]></content>
       <categories>
         <category>学习心得</category>
       </categories>
       <tags>
-        <tag>web前端</tag>
-        <tag>HTML</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
 </search>

@@ -470,7 +470,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2.1k
+                  2k
                 </span>
               
 
@@ -541,20 +541,11 @@
 <p><strong>输出描述：</strong></p>
 <p>输出一共有m行，每行为一个整数，代表第Mi行IP对应的机房编号。<br>如果所输入的IP没有找到对应的网段信息，就输出-1。</p>
 <p><strong>示例1:</strong></p>
-<p>输入：<br>4    4</p>
-<p>1 10.1.2.0/24</p>
-<p>2 10.1.0.0/16</p>
-<p>1 10.1.5.0/24</p>
-<p>2 10.1.2.128/125</p>
-<p>10.1.2.3</p>
-<p>10.1.2.129</p>
-<p>10.3.2.1</p>
-<p>10.1.5.2</p>
-<p>输出：</p>
-<p>1</p>
-<p>2</p>
-<p>-1</p>
-<p>1</p>
+<p> 输入：</p>
+   <figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4</span>	<span class="number">4</span>   </span><br><span class="line"><span class="symbol">1 </span><span class="number">10.1.2.0</span>/<span class="number">24</span>  </span><br><span class="line"><span class="symbol">2 </span><span class="number">10.1.0.0</span>/<span class="number">16</span>   </span><br><span class="line"><span class="symbol">1 </span><span class="number">10.1.5.0</span>/<span class="number">24</span>   </span><br><span class="line"><span class="symbol">2 </span><span class="number">10.1.2.128</span>/<span class="number">125</span>  </span><br><span class="line"><span class="number">10.1.2.3</span> </span><br><span class="line"><span class="number">10.1.2.129</span></span><br><span class="line"><span class="number">10.3.2.1</span></span><br><span class="line"><span class="number">10.1.5.2</span></span><br></pre></td></tr></table></figure>
+
+<p>  输出：</p>
+   <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">-1</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><strong>题目描述：</strong></p>
 <p>两姐妹小蔓和小玉玩抽牌游戏:一共n张牌，两人轮流抽排，先手者的第一次抽可以抽任意张但不可抽完，以后每次抽都只能抽取不超过上一次抽牌数的两倍(不可不抽)。谁先抽完牌谁赢(没得抽的算输)。由姐姐小蔓先抽。假设该游戏会进行t轮，每轮重新给出新的n。请问先手的姐姐小蔓一共能赢其中的多少轮呢?(注:两姐妹冰雪聪明，都会做出对自己最优的策略)</p>
@@ -564,9 +555,7 @@
 <p>一个数字x，代表姐姐小蔓赢得轮数</p>
 <p><strong>示例1:</strong></p>
 <p>输入：</p>
-<p>2</p>
-<p>4</p>
-<p>​5</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line">​<span class="number">5</span></span><br></pre></td></tr></table></figure>
 <p>输出：1</p>
 <p>说明： </p>
 <p>2&lt;=n&lt;=1e9</p>

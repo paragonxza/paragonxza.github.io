@@ -1,183 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java注解与反射</title>
-    <url>/2020/07/30/Java%E6%B3%A8%E8%A7%A3%E4%B8%8E%E5%8F%8D%E5%B0%84/</url>
-    <content><![CDATA[<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本文主要是总结Java注解与反射的相关知识，加深自己对Java类动态语言的理解，同时为日后学习Spring打下基础。</p>
-<a id="more"></a>
-
-<h2 id="注解："><a href="#注解：" class="headerlink" title="注解："></a>注解：</h2><h3 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h3><ul>
-<li><strong>Annotation的作用</strong><ul>
-<li>不是程序本身，但是可以对程序作出解释。</li>
-<li>可以被其他程序（比如：编译器等）读取。</li>
-</ul>
-</li>
-<li><strong>Annotation的格式：</strong><ul>
-<li>注解是以“@注释名”在代码中存在的，还可以添加一些参数值，例如：@SuppressWarnings(value=”unchecked”)。</li>
-</ul>
-</li>
-<li><strong>Annotation使用范围：</strong><ul>
-<li>附加在package、class、method、field等上面，相当于给他们添加了额外的辅助信息，然后通过反射机制编程实现对这些元数据的访问。</li>
-</ul>
-</li>
-</ul>
-<h3 id="内置注解"><a href="#内置注解" class="headerlink" title="内置注解"></a>内置注解</h3><ul>
-<li><p><strong>Override：</strong></p>
-<p>定义在java.lang.Override中，此注释只适用于修辞方法，表示一个方法声明打算重写超类中的另一个方法声明。</p>
-</li>
-<li><p><strong>Deprecated：</strong></p>
-<p>定义在java.lang.Deprecated中，此注释可以用于修辞方法、属性、类，表示不鼓励程序员使用这样的元素，通常是因为它很危险或者有更好的选择。</p>
-</li>
-<li><p><strong>SuppressWarnings：</strong></p>
-<p>定义在java.lang.SuppressWarnings中，用来抑制编译时警告信息，与前两个注释不同，此注解需要添加一个参数才可正常使用：</p>
-<p>➢SuppressWarnings(“all”)</p>
-<p>➢SuppressWarnings(“unchecked”)</p>
-<p>➢SuppressWarnings(value={“deprecation”,”unchecked”})</p>
-<p>➢……</p>
-</li>
-</ul>
-<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><ul>
-<li><p>元注解的作用就是负责注解其他注解，Java定义了4个标准的meta-annotation类型，他们被用来提供对其他annotaion类型作说明。</p>
-</li>
-<li><p>这些类型和他们所支持的类在java.lang.annotation包可以找到:</p>
-<p>➢<strong>@Target</strong>：用于描述注解的使用范围（即被描述的注解可以用在什么地方）</p>
-<p>➢<strong>@Retention</strong>:表示需要在什么级别保存该注释信息，用于描述注解的生命周期（SOURCE&lt;CLASS&lt;RUNTIME）。</p>
-<p>➢<strong>@Document</strong>:说明该注解将被包含在javadoc中。</p>
-<p>➢<strong>@Inherited</strong>:说明子类可以继承父类中的该注解。</p>
-</li>
-</ul>
-<h3 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h3><ul>
-<li><p>使用<strong>@interface</strong>自定义注解，格式：<strong>public @interface 注解名{定义内容}</strong>。</p>
-</li>
-<li><p>自定义注解内部的参数格式：<strong><font color ="ff0000">参数类型+参数名()</font></strong>；若只有一个参数成员，参数名默认为<strong>value</strong>。</p>
-</li>
-<li><p>注解的元素必须要有值，我们定义注解元素时，一般默认使用空字符串，0作为默认值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//注解可以显式赋值，如果没有默认值，则必须赋值</span></span><br><span class="line"><span class="meta">@myAnnotation</span>(id = <span class="number">3</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">testAnnotation</span> </span>&#123;</span><br><span class="line">    <span class="meta">@myAnnotation</span>(id = <span class="number">5</span>,school = &#123;<span class="string">"THU"</span>,<span class="string">"CMU"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Target</span>(value = &#123;ElementType.METHOD,ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> myAnnotation&#123;</span><br><span class="line">    <span class="comment">//注解的参数：参数类型+参数名()</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">id</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">age</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">    String[] school() <span class="keyword">default</span> &#123;<span class="string">"HDU"</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="反射："><a href="#反射：" class="headerlink" title="反射："></a>反射：</h2><h3 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h3><ul>
-<li><p><strong>Reflection</strong>是Java被视为动态语言的关键，反射机制允许程序在执行期间借助于Reflection API取得任何类的内部信息，并能直接操作任意对象的内部属性及方法。</p>
-</li>
-<li><p>Java在加载完类之后，在堆内存的方法区中就产生了一个<strong><font color ="ff0000">Class类型</font></strong>的对象（<strong><font color ="ff0000">一个类只有一个Class对象</font></strong>），这个对象就包含了完整的类的结构信息。我们通过这个对象可以看到类的结构，这种过程称为反射。</p>
-<ul>
-<li>正常方式：引入需要的“包类”名称➜通过new实例化➜取得实例化对象</li>
-<li>反射方式：实例化对象➜<strong>getClass()方法</strong>➜取得完整的“包类”名称</li>
-</ul>
-</li>
-<li><p>反射相关的API</p>
-<ul>
-<li><p>java.lang.Class：代表一个类</p>
-</li>
-<li><p>java.lang.reflect.Method：代表类的方法</p>
-</li>
-<li><p>java.lang.reflect.Field：代表类的成员变量</p>
-</li>
-<li><p>java.lang.reflect.Constructor：代表类的构造器</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">//通过反射获得类的Class对象</span></span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        Class&lt;?&gt; c2 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        Class&lt;?&gt; c3 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        <span class="comment">//一个类在内存中只有一个Class对象</span></span><br><span class="line">        <span class="comment">//一个类被加载后，类的整个结构都会被封装在Class对象中</span></span><br><span class="line">        System.out.println(c1.hashCode());</span><br><span class="line">        System.out.println(c2.hashCode());</span><br><span class="line">        System.out.println(c3.hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实体类 pojo ,Entity</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;...&#125;</span><br><span class="line"><span class="comment">//输出结果：hashCode相同</span></span><br><span class="line"><span class="number">1846274136</span></span><br><span class="line"><span class="number">1846274136</span></span><br><span class="line"><span class="number">1846274136</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="获得Class类的方式"><a href="#获得Class类的方式" class="headerlink" title="获得Class类的方式"></a>获得Class类的方式</h3><ul>
-<li><p>若已知具体的类，通过类的<strong>class属性</strong>获取。</p>
-</li>
-<li><p>若已知某个类的实例化对象，调用该实例的<strong>getClass()方法</strong>获取Class对象。</p>
-</li>
-<li><p>若已知一个类的全类名，且该类在类路径下，可以通过Class类的<strong>静态方法forName()</strong>方法获取。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test02</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student();</span><br><span class="line">        <span class="comment">//通过forName获得</span></span><br><span class="line">        Class c1 = Class.forName(<span class="string">"JavaDoc.Student"</span>);</span><br><span class="line">        <span class="comment">//通过对象获得</span></span><br><span class="line">        Class c2 = student.getClass();</span><br><span class="line">        <span class="comment">//通过类名.class获得</span></span><br><span class="line">        Class c3 = Student<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">      </span><br><span class="line">        System.out.println(c1.hashCode());</span><br><span class="line">        System.out.println(c2.hashCode());</span><br><span class="line">        System.out.println(c3.hashCode());</span><br><span class="line">        <span class="comment">//获得父类类型</span></span><br><span class="line">        System.out.println(c1.getSuperclass().hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实体类 pojo ,Entity</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;...&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="Java内存分析"><a href="#Java内存分析" class="headerlink" title="Java内存分析"></a>Java内存分析</h3><table>
-<thead>
-<tr>
-<th>Java内存区域</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>堆</td>
-<td>存放new的对象和数组，可以被所有的线程共享，不会存放别的对象引用</td>
-</tr>
-<tr>
-<td>栈</td>
-<td>存放基本类型变量（包含具体数值）和引用对象的变量（包含具体地址）</td>
-</tr>
-<tr>
-<td>方法区</td>
-<td>可以被所有线程共享，包含了所有class和static变量</td>
-</tr>
-</tbody></table>
-<p>这里只是浅显列出，详细分析需要参考Java的JVM。</p>
-<h3 id="Class类初始化"><a href="#Class类初始化" class="headerlink" title="Class类初始化"></a>Class类初始化</h3><ul>
-<li><p><strong>类的主动引用一定会发生类的初始化</strong></p>
-<ul>
-<li>当虚拟机启动时，先初始化main方法所在的类。</li>
-<li>调用类的静态成员（除了final常量）和静态方法会发生初始化。</li>
-<li>使用java.lang.reflect包反射调用会发生初始化。</li>
-</ul>
-</li>
-<li><p><strong>类的被动引用不会发生类的初始化</strong></p>
-<ul>
-<li>当访问一个静态域时，只有真正声明这个域的类才会被初始化。如当通过子类引用父类的静态变量，不会导致子类初始化。</li>
-<li>通过数组定义类的引用，不会触发此类的初始化。</li>
-<li>引用常量不会触发此类的初始化。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test03</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"Main类被加载"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">//主动引用</span></span><br><span class="line">        Son son = <span class="keyword">new</span> Son();</span><br><span class="line">      	<span class="comment">//final不会初始化父类和子类</span></span><br><span class="line">        System.out.println(Son.M);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"父类被加载"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"子类被加载"</span>);</span><br><span class="line">        m = <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> m = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> M = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出结果</span></span><br><span class="line">Main类被加载</span><br><span class="line">父类被加载</span><br><span class="line">子类被加载</span><br><span class="line"><span class="number">100</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p>类加载器作用是用来把类装载进内存，JVM规范定义了如下类型的类加载器：</p>
-<ul>
-<li><p><strong>系统类加载器：</strong></p>
-<p>负责java -classpath或- D，导入java.class.path所指定的目录下的类与jar包装入工作，是最常用的加载器。</p>
-</li>
-<li><p><strong>扩展类加载器：</strong></p>
-<p>负责jre/lib/ext目录下的jar包装入工作库。</p>
-</li>
-<li><p><strong>引导类加载器：</strong></p>
-<p>采取C++编写，是JVM自带的类加载器，负责Java平台的核心库，用来装载核心类库，无法直接获取。</p>
-</li>
-<li><p><strong>类加载器采取双亲委派机制，自底向上检查类是否已经装载，自顶向下尝试加载类。</strong></p>
-<p>自定义类加载器⇨System Classloader⇨Extension Classloader⇨Bootstrap Classloader</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test04</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">//获取系统类加载器</span></span><br><span class="line">        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();</span><br><span class="line">        System.out.println(systemClassLoader);</span><br><span class="line">        <span class="comment">//获取系统类加载器的父类加载器 --&gt; 扩展类加载器</span></span><br><span class="line">        ClassLoader parent = systemClassLoader.getParent();</span><br><span class="line">        System.out.println(parent);</span><br><span class="line">        <span class="comment">//获取扩展类加载器的父类加载器 --&gt; 根加载器（c/c++）</span></span><br><span class="line">        ClassLoader parent1 = parent.getParent();</span><br><span class="line">        System.out.println(parent1);</span><br><span class="line">        <span class="comment">//获取可加载的系统类加载器</span></span><br><span class="line">        System.out.println(System.getProperty(<span class="string">"java.class.path"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="类的运行时结构"><a href="#类的运行时结构" class="headerlink" title="类的运行时结构"></a>类的运行时结构</h3><ul>
-<li><strong>getName()</strong></li>
-<li><strong>getFields()</strong></li>
-<li><strong>getMethods()</strong></li>
-<li><strong>getConstructors()</strong></li>
-<li><strong>……</strong></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test05</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//getFields只能获取public类型信息</span></span><br><span class="line">        System.out.println(<span class="string">"===getFields===="</span>);</span><br><span class="line">        Field[] field = c1.getFields();</span><br><span class="line">        <span class="keyword">for</span> (Field field1 : field) &#123;</span><br><span class="line">            System.out.println(field1);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//getDeclaredFields可获取所有信息</span></span><br><span class="line">        System.out.println(<span class="string">"===getDeclaredFields===="</span>);</span><br><span class="line">        field = c1.getDeclaredFields();</span><br><span class="line">        <span class="keyword">for</span> (Field field1 : field) &#123;</span><br><span class="line">            System.out.println(field1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> score;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出结果</span></span><br><span class="line">===getFields====</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> JavaDoc.User.score</span><br><span class="line">===getDeclaredFields====</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> JavaDoc.User.score</span><br><span class="line"><span class="keyword">private</span> java.lang.String JavaDoc.User.name</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> JavaDoc.User.id</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> JavaDoc.User.age</span><br></pre></td></tr></table></figure>
-
-<h3 id="动态创建对象执行方法"><a href="#动态创建对象执行方法" class="headerlink" title="动态创建对象执行方法"></a>动态创建对象执行方法</h3><h4 id="创建类的对象："><a href="#创建类的对象：" class="headerlink" title="创建类的对象："></a>创建类的对象：</h4><p>调用Class对象的<strong>newInstance()</strong>方法</p>
-<ul>
-<li>类必须有一个无参构造器。</li>
-<li>类的构造器访问权限需要足够。</li>
-</ul>
-<h4 id="创建步骤："><a href="#创建步骤：" class="headerlink" title="创建步骤："></a>创建步骤：</h4><ul>
-<li>通过<strong>Class</strong>类中的<strong>getDeclaredConstructor()</strong>取得本类的指定形参类型的构造器。</li>
-<li>向构造器的形参中传递一个<strong>对象数组</strong>进去，里面包含了构造器中所需的各个参数。</li>
-<li>通过<strong>Constructor</strong>实例化对象。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test06</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException </span>&#123;</span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        <span class="comment">//newInstance默认调用无参构造</span></span><br><span class="line">        User user = (User) c1.newInstance();</span><br><span class="line">        System.out.println(user);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过构造器声明含参构造重新调用newInstance</span></span><br><span class="line">        Constructor&lt;?&gt; constructor = c1.getDeclaredConstructor(String<span class="class">.<span class="keyword">class</span>, <span class="title">int</span>.<span class="title">class</span>, <span class="title">int</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        User user2 = (User) constructor.newInstance(<span class="string">"zhangsan"</span>, <span class="number">001</span>, <span class="number">20</span>);</span><br><span class="line">        System.out.println(user2);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过反射机制调用User类中的方法</span></span><br><span class="line">        Method setName = c1.getDeclaredMethod(<span class="string">"setId"</span>, <span class="keyword">int</span><span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        setName.invoke(user,<span class="number">001</span>);</span><br><span class="line">        System.out.println(user.getId());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过关闭程序权限检测，操作程序的私有属性</span></span><br><span class="line">        User user4 = (User) c1.newInstance();</span><br><span class="line">        Field name = c1.getDeclaredField(<span class="string">"name"</span>);</span><br><span class="line">        name.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        name.set(user4,<span class="string">"zhangsan2"</span>);</span><br><span class="line">        System.out.println(user4.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name, <span class="keyword">int</span> id, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="反射操作注解"><a href="#反射操作注解" class="headerlink" title="反射操作注解"></a>反射操作注解</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test07</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException </span>&#123;</span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        <span class="comment">//通过反射获得注解</span></span><br><span class="line">        Annotation[] annotations = c1.getAnnotations();</span><br><span class="line">        <span class="keyword">for</span> (Annotation annotation : annotations) &#123;</span><br><span class="line">            System.out.println(annotation);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获得注解内部value值</span></span><br><span class="line">        Table table = c1.getAnnotation(Table<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(table.value());</span><br><span class="line">        <span class="comment">//获取内部指定字段的注解信息</span></span><br><span class="line">        Field f1 = c1.getDeclaredField(<span class="string">"name"</span>);</span><br><span class="line">        fieldStudent field = f1.getAnnotation(fieldStudent<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(field.columnName());</span><br><span class="line">        System.out.println(field.type());</span><br><span class="line">        System.out.println(field.length());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Table</span>(value = <span class="string">"db_User"</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@fieldStudent</span>(columnName = <span class="string">"db_name"</span>,type = <span class="string">"varchar"</span>,length = <span class="number">3</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="meta">@fieldStudent</span>(columnName = <span class="string">"db_id"</span>,type = <span class="string">"int"</span>,length = <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="meta">@fieldStudent</span>(columnName = <span class="string">"db_age"</span>,type = <span class="string">"int"</span>,length = <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//类名的注解</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> Table&#123;</span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//属性的注解</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.FIELD)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> fieldStudent&#123;</span><br><span class="line">    <span class="function">String <span class="title">columnName</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">type</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">length</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//程序输出</span></span><br><span class="line"><span class="meta">@JavaDoc</span>.Table(value=db_User)</span><br><span class="line">db_User</span><br><span class="line">db_name</span><br><span class="line">varchar</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Java基础学习</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础语法学习笔记</title>
     <url>/2020/07/28/Java%E5%9F%BA%E7%A1%80%E6%95%B4%E7%90%86/</url>
     <content><![CDATA[<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本文主要是总结一些Java的基础知识，主要是用来记录自己的学习过程与学习心得。</p>
@@ -588,6 +411,183 @@
       </tags>
   </entry>
   <entry>
+    <title>Java注解与反射</title>
+    <url>/2020/07/30/Java%E6%B3%A8%E8%A7%A3%E4%B8%8E%E5%8F%8D%E5%B0%84/</url>
+    <content><![CDATA[<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本文主要是总结Java注解与反射的相关知识，加深自己对Java类动态语言的理解，同时为日后学习Spring打下基础。</p>
+<a id="more"></a>
+
+<h2 id="注解："><a href="#注解：" class="headerlink" title="注解："></a>注解：</h2><h3 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h3><ul>
+<li><strong>Annotation的作用</strong><ul>
+<li>不是程序本身，但是可以对程序作出解释。</li>
+<li>可以被其他程序（比如：编译器等）读取。</li>
+</ul>
+</li>
+<li><strong>Annotation的格式：</strong><ul>
+<li>注解是以“@注释名”在代码中存在的，还可以添加一些参数值，例如：@SuppressWarnings(value=”unchecked”)。</li>
+</ul>
+</li>
+<li><strong>Annotation使用范围：</strong><ul>
+<li>附加在package、class、method、field等上面，相当于给他们添加了额外的辅助信息，然后通过反射机制编程实现对这些元数据的访问。</li>
+</ul>
+</li>
+</ul>
+<h3 id="内置注解"><a href="#内置注解" class="headerlink" title="内置注解"></a>内置注解</h3><ul>
+<li><p><strong>Override：</strong></p>
+<p>定义在java.lang.Override中，此注释只适用于修辞方法，表示一个方法声明打算重写超类中的另一个方法声明。</p>
+</li>
+<li><p><strong>Deprecated：</strong></p>
+<p>定义在java.lang.Deprecated中，此注释可以用于修辞方法、属性、类，表示不鼓励程序员使用这样的元素，通常是因为它很危险或者有更好的选择。</p>
+</li>
+<li><p><strong>SuppressWarnings：</strong></p>
+<p>定义在java.lang.SuppressWarnings中，用来抑制编译时警告信息，与前两个注释不同，此注解需要添加一个参数才可正常使用：</p>
+<p>➢SuppressWarnings(“all”)</p>
+<p>➢SuppressWarnings(“unchecked”)</p>
+<p>➢SuppressWarnings(value={“deprecation”,”unchecked”})</p>
+<p>➢……</p>
+</li>
+</ul>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><ul>
+<li><p>元注解的作用就是负责注解其他注解，Java定义了4个标准的meta-annotation类型，他们被用来提供对其他annotaion类型作说明。</p>
+</li>
+<li><p>这些类型和他们所支持的类在java.lang.annotation包可以找到:</p>
+<p>➢<strong>@Target</strong>：用于描述注解的使用范围（即被描述的注解可以用在什么地方）</p>
+<p>➢<strong>@Retention</strong>:表示需要在什么级别保存该注释信息，用于描述注解的生命周期（SOURCE&lt;CLASS&lt;RUNTIME）。</p>
+<p>➢<strong>@Document</strong>:说明该注解将被包含在javadoc中。</p>
+<p>➢<strong>@Inherited</strong>:说明子类可以继承父类中的该注解。</p>
+</li>
+</ul>
+<h3 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h3><ul>
+<li><p>使用<strong>@interface</strong>自定义注解，格式：<strong>public @interface 注解名{定义内容}</strong>。</p>
+</li>
+<li><p>自定义注解内部的参数格式：<strong><font color ="ff0000">参数类型+参数名()</font></strong>；若只有一个参数成员，参数名默认为<strong>value</strong>。</p>
+</li>
+<li><p>注解的元素必须要有值，我们定义注解元素时，一般默认使用空字符串，0作为默认值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//注解可以显式赋值，如果没有默认值，则必须赋值</span></span><br><span class="line"><span class="meta">@myAnnotation</span>(id = <span class="number">3</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">testAnnotation</span> </span>&#123;</span><br><span class="line">    <span class="meta">@myAnnotation</span>(id = <span class="number">5</span>,school = &#123;<span class="string">"THU"</span>,<span class="string">"CMU"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Target</span>(value = &#123;ElementType.METHOD,ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> myAnnotation&#123;</span><br><span class="line">    <span class="comment">//注解的参数：参数类型+参数名()</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">id</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">age</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">    String[] school() <span class="keyword">default</span> &#123;<span class="string">"HDU"</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="反射："><a href="#反射：" class="headerlink" title="反射："></a>反射：</h2><h3 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h3><ul>
+<li><p><strong>Reflection</strong>是Java被视为动态语言的关键，反射机制允许程序在执行期间借助于Reflection API取得任何类的内部信息，并能直接操作任意对象的内部属性及方法。</p>
+</li>
+<li><p>Java在加载完类之后，在堆内存的方法区中就产生了一个<strong><font color ="ff0000">Class类型</font></strong>的对象（<strong><font color ="ff0000">一个类只有一个Class对象</font></strong>），这个对象就包含了完整的类的结构信息。我们通过这个对象可以看到类的结构，这种过程称为反射。</p>
+<ul>
+<li>正常方式：引入需要的“包类”名称➜通过new实例化➜取得实例化对象</li>
+<li>反射方式：实例化对象➜<strong>getClass()方法</strong>➜取得完整的“包类”名称</li>
+</ul>
+</li>
+<li><p>反射相关的API</p>
+<ul>
+<li><p>java.lang.Class：代表一个类</p>
+</li>
+<li><p>java.lang.reflect.Method：代表类的方法</p>
+</li>
+<li><p>java.lang.reflect.Field：代表类的成员变量</p>
+</li>
+<li><p>java.lang.reflect.Constructor：代表类的构造器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">//通过反射获得类的Class对象</span></span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        Class&lt;?&gt; c2 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        Class&lt;?&gt; c3 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        <span class="comment">//一个类在内存中只有一个Class对象</span></span><br><span class="line">        <span class="comment">//一个类被加载后，类的整个结构都会被封装在Class对象中</span></span><br><span class="line">        System.out.println(c1.hashCode());</span><br><span class="line">        System.out.println(c2.hashCode());</span><br><span class="line">        System.out.println(c3.hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实体类 pojo ,Entity</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;...&#125;</span><br><span class="line"><span class="comment">//输出结果：hashCode相同</span></span><br><span class="line"><span class="number">1846274136</span></span><br><span class="line"><span class="number">1846274136</span></span><br><span class="line"><span class="number">1846274136</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="获得Class类的方式"><a href="#获得Class类的方式" class="headerlink" title="获得Class类的方式"></a>获得Class类的方式</h3><ul>
+<li><p>若已知具体的类，通过类的<strong>class属性</strong>获取。</p>
+</li>
+<li><p>若已知某个类的实例化对象，调用该实例的<strong>getClass()方法</strong>获取Class对象。</p>
+</li>
+<li><p>若已知一个类的全类名，且该类在类路径下，可以通过Class类的<strong>静态方法forName()</strong>方法获取。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test02</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student();</span><br><span class="line">        <span class="comment">//通过forName获得</span></span><br><span class="line">        Class c1 = Class.forName(<span class="string">"JavaDoc.Student"</span>);</span><br><span class="line">        <span class="comment">//通过对象获得</span></span><br><span class="line">        Class c2 = student.getClass();</span><br><span class="line">        <span class="comment">//通过类名.class获得</span></span><br><span class="line">        Class c3 = Student<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">      </span><br><span class="line">        System.out.println(c1.hashCode());</span><br><span class="line">        System.out.println(c2.hashCode());</span><br><span class="line">        System.out.println(c3.hashCode());</span><br><span class="line">        <span class="comment">//获得父类类型</span></span><br><span class="line">        System.out.println(c1.getSuperclass().hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实体类 pojo ,Entity</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;...&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Java内存分析"><a href="#Java内存分析" class="headerlink" title="Java内存分析"></a>Java内存分析</h3><table>
+<thead>
+<tr>
+<th>Java内存区域</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>堆</td>
+<td>存放new的对象和数组，可以被所有的线程共享，不会存放别的对象引用</td>
+</tr>
+<tr>
+<td>栈</td>
+<td>存放基本类型变量（包含具体数值）和引用对象的变量（包含具体地址）</td>
+</tr>
+<tr>
+<td>方法区</td>
+<td>可以被所有线程共享，包含了所有class和static变量</td>
+</tr>
+</tbody></table>
+<p>这里只是浅显列出，详细分析需要参考Java的JVM。</p>
+<h3 id="Class类初始化"><a href="#Class类初始化" class="headerlink" title="Class类初始化"></a>Class类初始化</h3><ul>
+<li><p><strong>类的主动引用一定会发生类的初始化</strong></p>
+<ul>
+<li>当虚拟机启动时，先初始化main方法所在的类。</li>
+<li>调用类的静态成员（除了final常量）和静态方法会发生初始化。</li>
+<li>使用java.lang.reflect包反射调用会发生初始化。</li>
+</ul>
+</li>
+<li><p><strong>类的被动引用不会发生类的初始化</strong></p>
+<ul>
+<li>当访问一个静态域时，只有真正声明这个域的类才会被初始化。如当通过子类引用父类的静态变量，不会导致子类初始化。</li>
+<li>通过数组定义类的引用，不会触发此类的初始化。</li>
+<li>引用常量不会触发此类的初始化。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test03</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"Main类被加载"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">//主动引用</span></span><br><span class="line">        Son son = <span class="keyword">new</span> Son();</span><br><span class="line">      	<span class="comment">//final不会初始化父类和子类</span></span><br><span class="line">        System.out.println(Son.M);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"父类被加载"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"子类被加载"</span>);</span><br><span class="line">        m = <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> m = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> M = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出结果</span></span><br><span class="line">Main类被加载</span><br><span class="line">父类被加载</span><br><span class="line">子类被加载</span><br><span class="line"><span class="number">100</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p>类加载器作用是用来把类装载进内存，JVM规范定义了如下类型的类加载器：</p>
+<ul>
+<li><p><strong>系统类加载器：</strong></p>
+<p>负责java -classpath或- D，导入java.class.path所指定的目录下的类与jar包装入工作，是最常用的加载器。</p>
+</li>
+<li><p><strong>扩展类加载器：</strong></p>
+<p>负责jre/lib/ext目录下的jar包装入工作库。</p>
+</li>
+<li><p><strong>引导类加载器：</strong></p>
+<p>采取C++编写，是JVM自带的类加载器，负责Java平台的核心库，用来装载核心类库，无法直接获取。</p>
+</li>
+<li><p><strong>类加载器采取双亲委派机制，自底向上检查类是否已经装载，自顶向下尝试加载类。</strong></p>
+<p>自定义类加载器⇨System Classloader⇨Extension Classloader⇨Bootstrap Classloader</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test04</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">//获取系统类加载器</span></span><br><span class="line">        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();</span><br><span class="line">        System.out.println(systemClassLoader);</span><br><span class="line">        <span class="comment">//获取系统类加载器的父类加载器 --&gt; 扩展类加载器</span></span><br><span class="line">        ClassLoader parent = systemClassLoader.getParent();</span><br><span class="line">        System.out.println(parent);</span><br><span class="line">        <span class="comment">//获取扩展类加载器的父类加载器 --&gt; 根加载器（c/c++）</span></span><br><span class="line">        ClassLoader parent1 = parent.getParent();</span><br><span class="line">        System.out.println(parent1);</span><br><span class="line">        <span class="comment">//获取可加载的系统类加载器</span></span><br><span class="line">        System.out.println(System.getProperty(<span class="string">"java.class.path"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="类的运行时结构"><a href="#类的运行时结构" class="headerlink" title="类的运行时结构"></a>类的运行时结构</h3><ul>
+<li><strong>getName()</strong></li>
+<li><strong>getFields()</strong></li>
+<li><strong>getMethods()</strong></li>
+<li><strong>getConstructors()</strong></li>
+<li><strong>……</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test05</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//getFields只能获取public类型信息</span></span><br><span class="line">        System.out.println(<span class="string">"===getFields===="</span>);</span><br><span class="line">        Field[] field = c1.getFields();</span><br><span class="line">        <span class="keyword">for</span> (Field field1 : field) &#123;</span><br><span class="line">            System.out.println(field1);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//getDeclaredFields可获取所有信息</span></span><br><span class="line">        System.out.println(<span class="string">"===getDeclaredFields===="</span>);</span><br><span class="line">        field = c1.getDeclaredFields();</span><br><span class="line">        <span class="keyword">for</span> (Field field1 : field) &#123;</span><br><span class="line">            System.out.println(field1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> score;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出结果</span></span><br><span class="line">===getFields====</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> JavaDoc.User.score</span><br><span class="line">===getDeclaredFields====</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> JavaDoc.User.score</span><br><span class="line"><span class="keyword">private</span> java.lang.String JavaDoc.User.name</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> JavaDoc.User.id</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> JavaDoc.User.age</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态创建对象执行方法"><a href="#动态创建对象执行方法" class="headerlink" title="动态创建对象执行方法"></a>动态创建对象执行方法</h3><h4 id="创建类的对象："><a href="#创建类的对象：" class="headerlink" title="创建类的对象："></a>创建类的对象：</h4><p>调用Class对象的<strong>newInstance()</strong>方法</p>
+<ul>
+<li>类必须有一个无参构造器。</li>
+<li>类的构造器访问权限需要足够。</li>
+</ul>
+<h4 id="创建步骤："><a href="#创建步骤：" class="headerlink" title="创建步骤："></a>创建步骤：</h4><ul>
+<li>通过<strong>Class</strong>类中的<strong>getDeclaredConstructor()</strong>取得本类的指定形参类型的构造器。</li>
+<li>向构造器的形参中传递一个<strong>对象数组</strong>进去，里面包含了构造器中所需的各个参数。</li>
+<li>通过<strong>Constructor</strong>实例化对象。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test06</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException </span>&#123;</span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        <span class="comment">//newInstance默认调用无参构造</span></span><br><span class="line">        User user = (User) c1.newInstance();</span><br><span class="line">        System.out.println(user);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过构造器声明含参构造重新调用newInstance</span></span><br><span class="line">        Constructor&lt;?&gt; constructor = c1.getDeclaredConstructor(String<span class="class">.<span class="keyword">class</span>, <span class="title">int</span>.<span class="title">class</span>, <span class="title">int</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        User user2 = (User) constructor.newInstance(<span class="string">"zhangsan"</span>, <span class="number">001</span>, <span class="number">20</span>);</span><br><span class="line">        System.out.println(user2);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过反射机制调用User类中的方法</span></span><br><span class="line">        Method setName = c1.getDeclaredMethod(<span class="string">"setId"</span>, <span class="keyword">int</span><span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        setName.invoke(user,<span class="number">001</span>);</span><br><span class="line">        System.out.println(user.getId());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过关闭程序权限检测，操作程序的私有属性</span></span><br><span class="line">        User user4 = (User) c1.newInstance();</span><br><span class="line">        Field name = c1.getDeclaredField(<span class="string">"name"</span>);</span><br><span class="line">        name.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        name.set(user4,<span class="string">"zhangsan2"</span>);</span><br><span class="line">        System.out.println(user4.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name, <span class="keyword">int</span> id, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="反射操作注解"><a href="#反射操作注解" class="headerlink" title="反射操作注解"></a>反射操作注解</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test07</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException </span>&#123;</span><br><span class="line">        Class&lt;?&gt; c1 = Class.forName(<span class="string">"JavaDoc.User"</span>);</span><br><span class="line">        <span class="comment">//通过反射获得注解</span></span><br><span class="line">        Annotation[] annotations = c1.getAnnotations();</span><br><span class="line">        <span class="keyword">for</span> (Annotation annotation : annotations) &#123;</span><br><span class="line">            System.out.println(annotation);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获得注解内部value值</span></span><br><span class="line">        Table table = c1.getAnnotation(Table<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(table.value());</span><br><span class="line">        <span class="comment">//获取内部指定字段的注解信息</span></span><br><span class="line">        Field f1 = c1.getDeclaredField(<span class="string">"name"</span>);</span><br><span class="line">        fieldStudent field = f1.getAnnotation(fieldStudent<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(field.columnName());</span><br><span class="line">        System.out.println(field.type());</span><br><span class="line">        System.out.println(field.length());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Table</span>(value = <span class="string">"db_User"</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@fieldStudent</span>(columnName = <span class="string">"db_name"</span>,type = <span class="string">"varchar"</span>,length = <span class="number">3</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="meta">@fieldStudent</span>(columnName = <span class="string">"db_id"</span>,type = <span class="string">"int"</span>,length = <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="meta">@fieldStudent</span>(columnName = <span class="string">"db_age"</span>,type = <span class="string">"int"</span>,length = <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//类名的注解</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> Table&#123;</span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//属性的注解</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.FIELD)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> fieldStudent&#123;</span><br><span class="line">    <span class="function">String <span class="title">columnName</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">type</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">length</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//程序输出</span></span><br><span class="line"><span class="meta">@JavaDoc</span>.Table(value=db_User)</span><br><span class="line">db_User</span><br><span class="line">db_name</span><br><span class="line">varchar</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Java基础学习</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java源码阅读</title>
     <url>/2020/07/18/Java%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/</url>
     <content><![CDATA[<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本文主要是总结如何配置Java源码的阅读环境，可以方便我们更深入的了解Java JDK的相关底层实现逻辑，许多诸如HashMap实现逻辑均可通过本方法调试查阅底层交互。</p>
@@ -731,20 +731,11 @@
 <p><strong>输出描述：</strong></p>
 <p>输出一共有m行，每行为一个整数，代表第Mi行IP对应的机房编号。<br>如果所输入的IP没有找到对应的网段信息，就输出-1。</p>
 <p><strong>示例1:</strong></p>
-<p>输入：<br>4    4</p>
-<p>1 10.1.2.0/24</p>
-<p>2 10.1.0.0/16</p>
-<p>1 10.1.5.0/24</p>
-<p>2 10.1.2.128/125</p>
-<p>10.1.2.3</p>
-<p>10.1.2.129</p>
-<p>10.3.2.1</p>
-<p>10.1.5.2</p>
-<p>输出：</p>
-<p>1</p>
-<p>2</p>
-<p>-1</p>
-<p>1</p>
+<p> 输入：</p>
+   <figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">4</span>	<span class="number">4</span>   </span><br><span class="line"><span class="symbol">1 </span><span class="number">10.1.2.0</span>/<span class="number">24</span>  </span><br><span class="line"><span class="symbol">2 </span><span class="number">10.1.0.0</span>/<span class="number">16</span>   </span><br><span class="line"><span class="symbol">1 </span><span class="number">10.1.5.0</span>/<span class="number">24</span>   </span><br><span class="line"><span class="symbol">2 </span><span class="number">10.1.2.128</span>/<span class="number">125</span>  </span><br><span class="line"><span class="number">10.1.2.3</span> </span><br><span class="line"><span class="number">10.1.2.129</span></span><br><span class="line"><span class="number">10.3.2.1</span></span><br><span class="line"><span class="number">10.1.5.2</span></span><br></pre></td></tr></table></figure>
+
+<p>  输出：</p>
+   <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">-1</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><strong>题目描述：</strong></p>
 <p>两姐妹小蔓和小玉玩抽牌游戏:一共n张牌，两人轮流抽排，先手者的第一次抽可以抽任意张但不可抽完，以后每次抽都只能抽取不超过上一次抽牌数的两倍(不可不抽)。谁先抽完牌谁赢(没得抽的算输)。由姐姐小蔓先抽。假设该游戏会进行t轮，每轮重新给出新的n。请问先手的姐姐小蔓一共能赢其中的多少轮呢?(注:两姐妹冰雪聪明，都会做出对自己最优的策略)</p>
@@ -754,9 +745,7 @@
 <p>一个数字x，代表姐姐小蔓赢得轮数</p>
 <p><strong>示例1:</strong></p>
 <p>输入：</p>
-<p>2</p>
-<p>4</p>
-<p>​5</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line">​<span class="number">5</span></span><br></pre></td></tr></table></figure>
 <p>输出：1</p>
 <p>说明： </p>
 <p>2&lt;=n&lt;=1e9</p>

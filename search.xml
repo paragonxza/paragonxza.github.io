@@ -113,21 +113,21 @@
 </li>
 <li><p><strong>在父级元素之后添加伪类after</strong>：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#father</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*效果等同于方法2*/</span></span><br><span class="line"><span class="selector-id">#father</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">''</span>;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<h3 id="3-层定位"><a href="#3-层定位" class="headerlink" title="3.层定位"></a>3.层定位</h3></li>
 </ol>
 </li>
-</ul>
-<h3 id="3-层定位"><a href="#3-层定位" class="headerlink" title="3.层定位"></a>3.层定位</h3><ul>
-<li><strong>position属性：</strong><ul>
+<li><p><strong>position属性：</strong></p>
+<ul>
 <li><strong>static：</strong>默认值，没有定位关系。</li>
 <li><strong>fixed：</strong>固定定位，相对于浏览器窗口。</li>
 <li><strong>relative：</strong>相对定位，相对于直接父元素，<font color="ff0000">relative脱离正常的文本流，但是其在文本流中的原始位置依然存在。</font></li>
 <li><strong>absolute：</strong>绝对定位，相对于static以外的第一个父级元素，<font color="ff0000">absolute脱离文本流，而且正常流中的原位置不再存在。</font></li>
 </ul>
 </li>
-<li><strong>位置属性：</strong>left,right,top,bottom：相对于左/右/上/下偏移距离（正值默认反向）</li>
-<li><strong>z-index属性：</strong>图层属性，默认值0，值越大说明优先级越高。</li>
+<li><p><strong>位置属性：</strong>left,right,top,bottom：相对于左/右/上/下偏移距离（正值默认反向）</p>
+</li>
+<li><p><strong>z-index属性：</strong>图层属性，默认值0，值越大说明优先级越高。</p>
+</li>
 </ul>
 <h2 id="CSS变换"><a href="#CSS变换" class="headerlink" title="CSS变换"></a>CSS变换</h2><h3 id="1-2D变换"><a href="#1-2D变换" class="headerlink" title="1.2D变换"></a>1.2D变换</h3><p><strong>transform属性：旋转，缩放，移动，拉伸</strong></p>
 <ul>

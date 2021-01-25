@@ -465,7 +465,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  62
+                  2.5k
                 </span>
               
 
@@ -481,7 +481,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  10
                 </span>
               
             </div>
@@ -505,7 +505,219 @@
         <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>Scrapy 框架架构清晰，各个模块之间的耦合度较低，可以方便我们进行模块化修改。本篇则对Scrapy框架各模块深入进行研究，并做了一个整理。</p>
 <a id="more"></a>
 
-<h2 id="1-Selector的用法"><a href="#1-Selector的用法" class="headerlink" title="1.Selector的用法"></a>1.Selector的用法</h2>
+<h2 id="Selector的用法"><a href="#Selector的用法" class="headerlink" title="Selector的用法"></a>Selector的用法</h2><h3 id="直接使用"><a href="#直接使用" class="headerlink" title="直接使用"></a>直接使用</h3><p>Selector 是一个可以独立使用的模块。我们可以直接利用 Selector 这个类来构建一个选择器对象，然后调用它的相关方法如 xpath()、css() 等来提取数据。</p>
+<p>例如，针对一段 HTML 代码，我们可以用如下方式构建 Selector 对象来提取数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> Selector</span><br><span class="line">body = <span class="string">'&lt;html&gt;&lt;head&gt;&lt;title&gt;Hello World&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;'</span></span><br><span class="line">selector = Selector(text=body)</span><br><span class="line">title = selector.xpath(<span class="string">'//title/text()'</span>).extract_first()</span><br><span class="line">print(title)</span><br><span class="line"></span><br><span class="line"><span class="comment">#运行结果：</span></span><br><span class="line">Hello World</span><br></pre></td></tr></table></figure>
+
+<p>我们在这里没有在 Scrapy 框架中运行，而是把 Scrapy 中的 Selector 单独拿出来使用了，构建的时候传入 text 参数，就生成了一个 Selector 选择器对象，然后就可以像前面我们所用的 Scrapy 中的解析方式一样，调用 xpath()、css() 等方法来提取了。</p>
+<p>在这里我们查找的是源代码中的 title 中的文本，在 XPath 选择器最后加 text() 方法就可以实现文本的提取了。</p>
+<p>以上内容就是 Selector 的直接使用方式。同 Beautiful Soup 等库类似，Selector 其实也是强大的网页解析库。如果方便的话，我们也可以在其他项目中直接使用 Selector 来提取数据。</p>
+<h3 id="通过选择器"><a href="#通过选择器" class="headerlink" title="通过选择器"></a>通过选择器</h3><p>接下来，演示的实例都将页面的源码作为分析目标，页面源码如下所示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">'http://example.com/'</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Example website<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">'images'</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image1.html'</span>&gt;</span>Name: My image 1 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image1_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image2.html'</span>&gt;</span>Name: My image 2 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image2_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image3.html'</span>&gt;</span>Name: My image 3 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image3_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image4.html'</span>&gt;</span>Name: My image 4 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image4_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image5.html'</span>&gt;</span>Name: My image 5 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image5_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>进入 Scrapy shell 之后，我们将主要操作 response 这个变量来进行解析。因为我们解析的是 HTML 代码，Selector 将自动使用 HTML 语法来分析。</p>
+<p>response 有一个属性 selector，我们调用 response.selector 返回的内容就相当于用 response 的 text 构造了一个 Selector 对象。通过这个 Selector 对象我们可以调用解析方法如 xpath()、css() 等，通过向方法传入 XPath 或 CSS 选择器参数就可以实现信息的提取。</p>
+<h3 id="XPath选择器"><a href="#XPath选择器" class="headerlink" title="XPath选择器"></a>XPath选择器</h3><h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a>选取节点</h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。</p>
+<table>
+<thead>
+<tr>
+<th align="left">表达式</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">nodename</td>
+<td align="left">选取此节点的所有子节点。</td>
+</tr>
+<tr>
+<td align="left">/</td>
+<td align="left">从根节点选取。</td>
+</tr>
+<tr>
+<td align="left">//</td>
+<td align="left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</td>
+</tr>
+<tr>
+<td align="left">.</td>
+<td align="left">选取当前节点。</td>
+</tr>
+<tr>
+<td align="left">..</td>
+<td align="left">选取当前节点的父节点。</td>
+</tr>
+<tr>
+<td align="left">@</td>
+<td align="left">选取属性。</td>
+</tr>
+</tbody></table>
+<p><strong>实例</strong></p>
+<p>在下面的表格中，我们已列出了一些路径表达式以及表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th align="left">路径表达式</th>
+<th align="left">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">bookstore</td>
+<td align="left">选取 bookstore 元素的所有子节点。</td>
+</tr>
+<tr>
+<td align="left">/bookstore</td>
+<td align="left">选取根元素 bookstore。注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
+</tr>
+<tr>
+<td align="left">bookstore/book</td>
+<td align="left">选取属于 bookstore 的子元素的所有 book 元素。</td>
+</tr>
+<tr>
+<td align="left">//book</td>
+<td align="left">选取所有 book 子元素，而不管它们在文档中的位置。</td>
+</tr>
+<tr>
+<td align="left">bookstore//book</td>
+<td align="left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置。</td>
+</tr>
+<tr>
+<td align="left">//@lang</td>
+<td align="left">选取名为 lang 的所有属性。</td>
+</tr>
+</tbody></table>
+<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a>谓语（Predicates）</h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。谓语被嵌在方括号中。</p>
+<p><strong>实例</strong></p>
+<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th align="left">路径表达式</th>
+<th align="left">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">/bookstore/book[1]</td>
+<td align="left">选取属于 bookstore 子元素的第一个 book 元素。</td>
+</tr>
+<tr>
+<td align="left">/bookstore/book[last()]</td>
+<td align="left">选取属于 bookstore 子元素的最后一个 book 元素。</td>
+</tr>
+<tr>
+<td align="left">/bookstore/book[last()-1]</td>
+<td align="left">选取属于 bookstore 子元素的倒数第二个 book 元素。</td>
+</tr>
+<tr>
+<td align="left">/bookstore/book[position()&lt;3]</td>
+<td align="left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素。</td>
+</tr>
+<tr>
+<td align="left">//title[@lang]</td>
+<td align="left">选取所有拥有名为 lang 的属性的 title 元素。</td>
+</tr>
+<tr>
+<td align="left">//title[@lang=’eng’]</td>
+<td align="left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性。</td>
+</tr>
+<tr>
+<td align="left">/bookstore/book[price&gt;35.00]</td>
+<td align="left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00。</td>
+</tr>
+<tr>
+<td align="left">/bookstore/book[price&gt;35.00]/title</td>
+<td align="left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00。</td>
+</tr>
+</tbody></table>
+<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a>选取未知节点</h4><p>XPath 通配符可用来选取未知的 XML 元素。</p>
+<table>
+<thead>
+<tr>
+<th align="left">通配符</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">*</td>
+<td align="left">匹配任何元素节点。</td>
+</tr>
+<tr>
+<td align="left">@*</td>
+<td align="left">匹配任何属性节点。</td>
+</tr>
+<tr>
+<td align="left">node()</td>
+<td align="left">匹配任何类型的节点。</td>
+</tr>
+</tbody></table>
+<p><strong>实例</strong></p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th align="left">路径表达式</th>
+<th align="left">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">/bookstore/*</td>
+<td align="left">选取 bookstore 元素的所有子元素。</td>
+</tr>
+<tr>
+<td align="left">//*</td>
+<td align="left">选取文档中的所有元素。</td>
+</tr>
+<tr>
+<td align="left">//title[@*]</td>
+<td align="left">选取所有带有属性的 title 元素。</td>
+</tr>
+</tbody></table>
+<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a>选取若干路径</h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
+<p><strong>实例</strong></p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th align="left">路径表达式</th>
+<th align="left">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">//book/title | //book/price</td>
+<td align="left">选取 book 元素的所有 title 和 price 元素。</td>
+</tr>
+<tr>
+<td align="left">//title | //price</td>
+<td align="left">选取文档中的所有 title 和 price 元素。</td>
+</tr>
+<tr>
+<td align="left">/bookstore/book/title | //price</td>
+<td align="left">选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素。</td>
+</tr>
+</tbody></table>
+<h4 id="实例展示"><a href="#实例展示" class="headerlink" title="实例展示"></a>实例展示</h4><p>分析如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>result = response.selector.xpath(<span class="string">'//a'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>result</span><br><span class="line">[&lt;Selector xpath=<span class="string">'//a'</span> data=<span class="string">'&lt;a href="image1.html"&gt;Name: My image 1 &lt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'//a'</span> data=<span class="string">'&lt;a href="image2.html"&gt;Name: My image 2 &lt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'//a'</span> data=<span class="string">'&lt;a href="image3.html"&gt;Name: My image 3 &lt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'//a'</span> data=<span class="string">'&lt;a href="image4.html"&gt;Name: My image 4 &lt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'//a'</span> data=<span class="string">'&lt;a href="image5.html"&gt;Name: My image 5 &lt;'</span>&gt;]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>type(result)</span><br><span class="line">scrapy.selector.unified.SelectorList</span><br></pre></td></tr></table></figure>
+
+<p>打印结果的形式是 Selector 组成的列表，其实它是 SelectorList 类型，SelectorList 和 Selector 都可以继续调用 xpath() 和 css() 等方法来进一步提取数据。</p>
+<p>在上面的例子中，我们提取了 a 节点。接下来，我们尝试继续调用 xpath() 方法来提取 a 节点内包含的 img 节点，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>result.xpath(<span class="string">'./img'</span>)</span><br><span class="line">[&lt;Selector xpath=<span class="string">'./img'</span> data=<span class="string">'&lt;img src="image1_thumb.jpg"&gt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'./img'</span> data=<span class="string">'&lt;img src="image2_thumb.jpg"&gt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'./img'</span> data=<span class="string">'&lt;img src="image3_thumb.jpg"&gt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'./img'</span> data=<span class="string">'&lt;img src="image4_thumb.jpg"&gt;'</span>&gt;,</span><br><span class="line"> &lt;Selector xpath=<span class="string">'./img'</span> data=<span class="string">'&lt;img src="image5_thumb.jpg"&gt;'</span>&gt;]</span><br></pre></td></tr></table></figure>
+
+<p>我们获得了 a 节点里面的所有 img 节点，结果为 5。</p>
+<p>值得注意的是，选择器的最前方加 .（点），这代表提取元素内部的数据，如果没有加点，则代表从根节点开始提取。此处我们用了./img 的提取方式，则代表从 a 节点里进行提取。如果此处我们用 //img，则还是从 html 节点里进行提取。</p>
+<p>我们刚才使用了 response.selector.xpath() 方法对数据进行了提取。Scrapy 提供了两个实用的快捷方法，response.xpath() 和 response.css()，它们二者的功能完全等同于 response.selector.xpath() 和 response.selector.css()。方便起见，后面我们统一直接调用 response 的 xpath() 和 css() 方法进行选择。</p>
+<p>现在我们得到的是 SelectorList 类型的变量，该变量是由 Selector 对象组成的列表。我们可以用索引单独取出其中某个 Selector 元素，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>result[<span class="number">0</span>]</span><br><span class="line">&lt;Selector xpath=<span class="string">'//a'</span> data=<span class="string">'&lt;a href="image1.html"&gt;Name: My image 1 &lt;'</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以像操作列表一样操作这个 SelectorList。</p>
+<p>但是现在获取的内容是 Selector 或者 SelectorList 类型，并不是真正的文本内容。那么具体的内容怎么提取呢？</p>
+<p>比如我们现在想提取出 a 节点元素，就可以利用 extract() 方法，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>result.extract()</span><br><span class="line">[<span class="string">'&lt;a href="image1.html"&gt;Name: My image 1 &lt;br&gt;&lt;img src="image1_thumb.jpg"&gt;&lt;/a&gt;'</span>, <span class="string">'&lt;a href="image2.html"&gt;Name: My image 2 &lt;br&gt;&lt;img src="image2_thumb.jpg"&gt;&lt;/a&gt;'</span>, <span class="string">'&lt;a href="image3.html"&gt;Name: My image 3 &lt;br&gt;&lt;img src="image3_thumb.jpg"&gt;&lt;/a&gt;'</span>, <span class="string">'&lt;a href="image4.html"&gt;Name: My image 4 &lt;br&gt;&lt;img src="image4_thumb.jpg"&gt;&lt;/a&gt;'</span>, <span class="string">'&lt;a href="image5.html"&gt;Name: My image 5 &lt;br&gt;&lt;img src="image5_thumb.jpg"&gt;&lt;/a&gt;'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了 extract() 方法，我们就可以把真实需要的内容获取下来。</p>
+<p>我们还可以改写 XPath 表达式，来选取节点的内部文本和属性，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>response.xpath(<span class="string">'//a/text()'</span>).extract()</span><br><span class="line">[<span class="string">'Name: My image 1 '</span>, <span class="string">'Name: My image 2 '</span>, <span class="string">'Name: My image 3 '</span>, <span class="string">'Name: My image 4 '</span>, <span class="string">'Name: My image 5 '</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>response.xpath(<span class="string">'//a/@href'</span>).extract()</span><br><span class="line">[<span class="string">'image1.html'</span>, <span class="string">'image2.html'</span>, <span class="string">'image3.html'</span>, <span class="string">'image4.html'</span>, <span class="string">'image5.html'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>我们只需要再加一层 /text() 就可以获取节点的内部文本，或者加一层 /@href 就可以获取节点的 href 属性。其中，@符号后面内容就是要获取的属性名称。</p>
+<p>现在我们可以用一个规则把所有符合要求的节点都获取下来，返回的类型是列表类型。</p>
+<h3 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h3><h3 id="正则匹配"><a href="#正则匹配" class="headerlink" title="正则匹配"></a>正则匹配</h3><h2 id="Spider的用法"><a href="#Spider的用法" class="headerlink" title="Spider的用法"></a>Spider的用法</h2><h4 id="Spider运行流程"><a href="#Spider运行流程" class="headerlink" title="Spider运行流程"></a>Spider运行流程</h4><h4 id="Spider类分析"><a href="#Spider类分析" class="headerlink" title="Spider类分析"></a>Spider类分析</h4><h2 id="Middleware的用法"><a href="#Middleware的用法" class="headerlink" title="Middleware的用法"></a>Middleware的用法</h2><h4 id="Downloader-Middleware的用法"><a href="#Downloader-Middleware的用法" class="headerlink" title="Downloader Middleware的用法"></a>Downloader Middleware的用法</h4><h4 id="Spider-Middleware的用法"><a href="#Spider-Middleware的用法" class="headerlink" title="Spider Middleware的用法"></a>Spider Middleware的用法</h4><h2 id="Item-Pipeline的用法"><a href="#Item-Pipeline的用法" class="headerlink" title="Item Pipeline的用法"></a>Item Pipeline的用法</h2>
       
     </div>
     
@@ -552,6 +764,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/09/Scrapy%E5%AD%A6%E4%B9%A0Splash%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="Scrapy学习Splash的使用">
+                Scrapy学习Splash的使用 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -635,7 +851,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -740,7 +956,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概要"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Selector的用法"><span class="nav-number">2.</span> <span class="nav-text">1.Selector的用法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概要"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selector的用法"><span class="nav-number">2.</span> <span class="nav-text">Selector的用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接使用"><span class="nav-number">2.1.</span> <span class="nav-text">直接使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过选择器"><span class="nav-number">2.2.</span> <span class="nav-text">通过选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XPath选择器"><span class="nav-number">2.3.</span> <span class="nav-text">XPath选择器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选取节点"><span class="nav-number">2.3.1.</span> <span class="nav-text">选取节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#谓语（Predicates）"><span class="nav-number">2.3.2.</span> <span class="nav-text">谓语（Predicates）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选取未知节点"><span class="nav-number">2.3.3.</span> <span class="nav-text">选取未知节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选取若干路径"><span class="nav-number">2.3.4.</span> <span class="nav-text">选取若干路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例展示"><span class="nav-number">2.3.5.</span> <span class="nav-text">实例展示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS选择器"><span class="nav-number">2.4.</span> <span class="nav-text">CSS选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则匹配"><span class="nav-number">2.5.</span> <span class="nav-text">正则匹配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spider的用法"><span class="nav-number">3.</span> <span class="nav-text">Spider的用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spider运行流程"><span class="nav-number">3.0.1.</span> <span class="nav-text">Spider运行流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spider类分析"><span class="nav-number">3.0.2.</span> <span class="nav-text">Spider类分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Middleware的用法"><span class="nav-number">4.</span> <span class="nav-text">Middleware的用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Downloader-Middleware的用法"><span class="nav-number">4.0.1.</span> <span class="nav-text">Downloader Middleware的用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spider-Middleware的用法"><span class="nav-number">4.0.2.</span> <span class="nav-text">Spider Middleware的用法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Item-Pipeline的用法"><span class="nav-number">5.</span> <span class="nav-text">Item Pipeline的用法</span></a></li></ol></div>
             
 
           </div>
@@ -767,7 +983,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2020 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-[object Object]"></i>
   </span>
